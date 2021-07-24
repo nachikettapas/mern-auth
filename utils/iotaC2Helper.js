@@ -1,5 +1,6 @@
 const Converter = require("@iota/iota.js");
 const crypto = require("crypto");
+const Web3 = require('web3');
 
 /**
  * Chrysalis client helper functions
@@ -22,10 +23,12 @@ class IotaC2Helper {
     static async messageToPayload(message) {
         // Need the any casts in this function because the iota.rs binding definitions are incorrect.
         if (message.message.payload.type !== 2) {
-            throw new Error(`Invalid messageId: ${message.messageId}. Message has no Indexation Payload containing data.`);
+            throw new Error(`Invalid messageId: ${message.messageid}. Message has no Indexation Payload containing data.`);
         }
 
-        const payload = JSON.parse(Converter.hexToUtf8((message.message.payload).data));
+        //const payload = JSON.parse(Converter.hexToUtf8((message.message.payload).data));
+        const data = (message.message.payload).data;
+        const payload = decodeURIComponent(data.replace(/\s+/g, '').replace(/[0-9a-f]{2}/g, '%$&'));
 
         if (payload) {
             return payload;
