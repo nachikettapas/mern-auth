@@ -6,6 +6,7 @@ const passport = require("passport");
 const auth = require("./routes/auth");
 const users = require("./routes/users");
 const ipfs = require("./routes/ipfs");
+const config = require("./config/keys.js");
 
 const app = express();
 

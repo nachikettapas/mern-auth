@@ -17,17 +17,19 @@ const State = require("../models/State");
 // @access Public
 router.get("/", async (req, res) => {
     try {
-        ValidationHelper.string(req.body.messageId, "messageId");
-        ValidationHelper.isMessageId(req.body.messageId);
+        ValidationHelper.string(req.query.messageId, "messageId");
+        ValidationHelper.isMessageId(req.query.messageId);
 
-        MessageCache.findOne({ messageid: req.body.messageId })
+        MessageCache.findOne({ messageid: req.query.messageId })
 		    .then(async (message) => {
                 
+                console.log("Message: " + message);
                 if (!message) {
-                    throw new Error(`Unable to locate the specified message: '${req.body.messageId}'.`);
+                    throw new Error(`Unable to locate the specified message: '${req.query.messageId}'.`);
                 }
                 
                 const payload = await IotaC2Helper.messageToPayload(message);
+                console.log("Payload: " + payload);
                 const output = Object.assign({"success": "true", "message": "OK"}, JSON.parse(payload));
 
                 return res.json(output);
@@ -44,6 +46,7 @@ router.get("/", async (req, res) => {
 // @desc Store ipfs data
 // @access Public
 router.post("/", async (req, res) => {
+    console.log("Name: " + req.body.name);
     try {
         ValidationHelper.string(req.body.name, "name");
         ValidationHelper.string(req.body.description, "description");
@@ -182,25 +185,3 @@ router.post("/", async (req, res) => {
 });
 
 module.exports = router;
-
-    // //Data insert code
-    // const varData = new MessageCache({
-    //     messageid: "2e246558305e362964d2f261d1b8e6050a46811bd13ea5e9ef6ec7f2d304d22f",
-    //     message: {
-    //                 "networkId": "14379272398717627559",
-    //                 "nonce": "857931",
-    //                 "parentMessageIds": [
-    //                     "25f84df299053ae22e0ff76a94ba76a52379098564a0e6dc8c2efd8b56313dd7",
-    //                     "8c1bdf041b8298eaa41e22c463d5ff9f079c23de776bdd8190e18fbdbdacb371",
-    //                     "9040bc123abd814bd684ad3f4f38f0f44f1341299a2deb41439e6311756844c2",
-    //                     "e146b58684e4fd801100e2c14ab351ae6182d7d166918eb9898a7a1239ef5443"
-    //                 ],
-    //                 "payload": {
-    //                     "data": "7b226e616d65223a227465737446696c65222c226465736372697074696f6e223a226466647366222c2273697a65223a32382c226d6f646966696564223a22323032312d30362d31305431333a35393a35302e3334345a222c22616c676f726974686d223a2273686133222c2268617368223a2239663866656338393233376439383433346337306531623238386234633333636131623965376665316539356134366362343566666464653737663435613161222c2269706673223a22516d574a50686254676f41457966634d754e744a38655757514165657556696734535147707042726b535a566e51227d",
-    //                     "index": "64393832383561653237353836643036353930396665633333666365613039313963343838636266383736383630613665303166613338333230323761346565",
-    //                     "type": "2"
-    //                 }
-    //             }
-    // });
-    // varData.save()
-    //     .then(res => console.log(res));
