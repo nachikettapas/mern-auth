@@ -169,17 +169,24 @@ class Retrieve extends Component {
         });
   }
 
-  //Retrieve file data
-  async retrieveFileIPFS(fileHash) {
-    const ipfsPath = "https://ipfs.io/ipfs/:hash".replace(":hash", fileHash); 
-    try {
-      const axiosResponse = await axios.get(ipfsPath, {
-           responseType: "arraybuffer"
-      });
-      return Buffer.from(axiosResponse.data);
-    } catch (err) {
-      
-    }      
+  /**
+  * Open a hash in the explorer.
+  * @param fileHash The file hash.
+  */
+   exploreFile(fileHash) {
+    if (fileHash) {
+      const ipfsPath = "https://ipfs.io/ipfs/:hash".replace(":hash", fileHash); 
+      window.open(ipfsPath, "_blank");
+    }
+  }
+
+  copyToClipboard(textToCopy) {
+    var dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = textToCopy;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
   }
 
   render() {
@@ -271,35 +278,51 @@ class Retrieve extends Component {
                     <tr className="link grey-text">
                       <td>IPFS Hash: </td>
                       <td></td>
-                      <td>{this.state.ipfsHash}</td>
+                      <td><button
+                            color="secondary"
+                            long={true}
+                            disableCaseStyle={true}
+                            onClick={() => this.exploreFile(this.state.ipfsHash)}
+                          >
+                          {this.state.ipfsHash}
+                          </button>
+                          &nbsp;&nbsp;&nbsp;
+                          <button
+                            color="secondary"
+                            onClick={() => this.copyToClipboard(this.state.ipfsHash)}
+                          >
+                          Copy IPFS Hash
+                          </button>
+                      </td>
+                      {/* <td>{this.state.ipfsHash}</td> */}
                       </tr>
                   )}
-                  {this.state.ipfsFileHash && (
+                  {/* {this.state.ipfsFileHash && (
                     <tr className="link grey-text">
                       <td>IPFS File Hash: </td>
                       <td></td>
                       <td>{this.state.ipfsFileHash}</td>
                       </tr>
-                  )}
-                  {this.state.fileBuffer && (
+                  )} */}
+                  {/* {this.state.ipfsHash && (
                     <div>
                         <button
                             color="secondary"
                             long={true}
                             disableCaseStyle={true}
-                            onClick={() => this._ipfsService.exploreFile(this.state.ipfsHash)}
+                            onClick={() => this.exploreFile(this.state.ipfsHash)}
                         >
                         {this.state.ipfsHash}
                         </button>
                         &nbsp;&nbsp;&nbsp;
                         <button
                             color="secondary"
-                            //onClick={() => ClipboardHelper.copy(this.state.ipfsHash)}
+                            onClick={() => this.copyToClipboard(this.state.ipfsHash)}
                         >
                         Copy IPFS Hash
-                        </button>
-                  </div>
-                  )}
+                        </button> */}
+                  {/* </div>
+                  )} */}
                   <button color="primary" onClick={() => this.resetState()}>Retrieve Another File</button>
             </div>
           </div>
