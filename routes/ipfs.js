@@ -23,13 +23,11 @@ router.get("/", async (req, res) => {
         MessageCache.findOne({ messageid: req.query.messageId })
 		    .then(async (message) => {
                 
-                console.log("Message: " + message);
                 if (!message) {
                     throw new Error(`Unable to locate the specified message: '${req.query.messageId}'.`);
                 }
                 
                 const payload = await IotaC2Helper.messageToPayload(message);
-                console.log("Payload: " + payload);
                 const output = Object.assign({"success": "true", "message": "OK"}, JSON.parse(payload));
 
                 return res.json(output);

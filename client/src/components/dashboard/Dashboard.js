@@ -209,14 +209,23 @@ class Dashboard extends Component {
   * @param messageId The id of the message.
   */
   message(messageId) {
-  if (messageId) {
+    if (messageId) {
       const tanglePath = {
                             "messages": "https://explorer.iota.org/testnet/message/:messageId"
                           };
       const tangleMessage = tanglePath.messages.replace(":messageId", messageId);
       window.open(tangleMessage, "_blank");
+    }
   }
-}
+
+  copyToClipboard(textToCopy) {
+    var dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = textToCopy;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+  }
 
   render() {
     const { user } = this.props.auth;
@@ -351,7 +360,7 @@ class Dashboard extends Component {
                     &nbsp;&nbsp;&nbsp;      
                     <button
                         color="secondary"
-                        // onClick={() => ClipboardHelper.copy(this.state.messageId)}
+                        onClick={() => this.copyToClipboard(this.state.messageId)}
                     >
                         Copy Tangle Hash
                     </button>
@@ -370,7 +379,7 @@ class Dashboard extends Component {
                     &nbsp;&nbsp;&nbsp;      
                     <button
                         color="secondary"
-                        // onClick={() => ClipboardHelper.copy(this.state.ipfsHash)}
+                        onClick={() => this.copyToClipboard(this.state.ipfsHash)}
                     >
                         Copy IPFS Hash
                     </button>
