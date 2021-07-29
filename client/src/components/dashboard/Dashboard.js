@@ -230,6 +230,7 @@ class Dashboard extends Component {
             <ul id="nav-mobile" className="left hide-on-med-and-down">
               <li><Link className="link grey-text" to="/">Upload File</Link></li>
               <li><Link className="link grey-text" to="/retrieve">Retrieve File</Link></li>
+              <li><Link className="link grey-text" onClick={this.onLogoutClick}>Logout</Link></li>
             </ul>
           </div>
         </nav>
@@ -329,6 +330,7 @@ class Dashboard extends Component {
             <ul id="nav-mobile" className="left hide-on-med-and-down">
               <li><Link className="link grey-text" to="/">Upload File</Link></li>
               <li><Link className="link grey-text" to="/retrieve">Retrieve File</Link></li>
+              <li><Link className="link grey-text" onClick={this.onLogoutClick}>Logout</Link></li>
             </ul>
           </div>
         </nav>

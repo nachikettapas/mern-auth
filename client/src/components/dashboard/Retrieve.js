@@ -34,6 +34,11 @@ class Retrieve extends Component {
     };
   }
 
+  onLogoutClick = e => {
+    e.preventDefault();
+    this.props.logoutUser();
+  };
+  
   /**
   * The component mounted.
   */
@@ -189,6 +194,7 @@ class Retrieve extends Component {
               <ul id="nav-mobile" className="left hide-on-med-and-down">
                 <li><Link className="link grey-text" to="/">Upload File</Link></li>
                 <li><Link className="link grey-text" to="/retrieve">Retrieve File</Link></li>
+                <li><Link className="link grey-text" onClick={this.onLogoutClick}>Logout</Link></li>
               </ul>
             </div>
           </nav>
@@ -220,6 +226,7 @@ class Retrieve extends Component {
               <ul id="nav-mobile" className="left hide-on-med-and-down">
                 <li><Link className="link grey-text" to="/">Upload File</Link></li>
                 <li><Link className="link grey-text" to="/retrieve">Retrieve File</Link></li>
+                <li><Link className="link grey-text" onClick={this.onLogoutClick}>Logout</Link></li>
               </ul>
             </div>
           </nav>
