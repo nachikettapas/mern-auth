@@ -112,7 +112,7 @@ class Landing extends Component {
               passport and JWTs
             </p>
             <br />
-            <div className="col s4">
+            {/* <div className="col s4">
               <Link
                 to="/register"
                 style={{
@@ -124,8 +124,8 @@ class Landing extends Component {
               >
                 Register
               </Link>
-            </div>
-            <div className="col s4">
+            </div> */}
+            <div class="col s4 offset-s4">
               <Link
                 to="/loginoneclick"
                 style={{
@@ -139,7 +139,7 @@ class Landing extends Component {
                 Log In One-Click
               </Link>
             </div>
-            <div className="col s4">
+            {/* <div className="col s4">
               <Link
                 to="/login"
                 style={{
@@ -151,7 +151,7 @@ class Landing extends Component {
               >
                 Log In
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

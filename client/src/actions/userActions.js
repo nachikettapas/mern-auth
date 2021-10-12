@@ -65,3 +65,27 @@ export const setUserLoading = () => {
     type: USER_LOADING
   };
 };
+
+export const assignRole = publicAddress => dispatch => {
+  return axios
+    .post("/api/users/authorizeuser", { address: publicAddress })
+    .then(res => { return res.data; })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err
+      })
+    );
+}
+
+export const removeRole = publicAddress => dispatch => {
+  return axios
+    .post("/api/users/unauthorizeuser", { address: publicAddress })
+    .then(res => { return res.data; })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err
+      })
+    );
+}

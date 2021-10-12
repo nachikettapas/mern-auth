@@ -14,6 +14,18 @@ const validateLoginInput = require("../validation/login");
 const User = require("../models/User");
 const UserOneClick = require("../models/UserOneClick");
 
+//For smart contrat
+const Web3 = require("web3");
+if (typeof web3 !== 'undefined') {
+    var web3 = new Web3(web3.currentProvider)
+  } else {
+    var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'))
+}
+const contractCode = require('../contracts/RBAC.json');
+const baseAddress = "0x042Ed7DDdEE15E85d4C8a310e4BA47503F31b3c5";
+const contract = new web3.eth.Contract(contractCode.abi, baseAddress);
+const adminAddress = "0xccf20e63B3cFe990B997D9AeEABf5f2222BaC9Ff";
+
 // @route POST api/users/register
 // @desc Register user
 // @access Public
@@ -183,11 +195,16 @@ router.post("/loginoneclick", (req, res) => {
 			////////////////////////////////////////////////////
 			// Step 4: Create JWT
 			////////////////////////////////////////////////////
-			.then((user) => {
+			.then( async (user) => {
+				const isAdmin = await contract.methods.hasRole(publicAddress, web3.utils.fromAscii("admin")).call();
+				const usrRole = isAdmin ? "admin" : "user";
+
 				jwt.sign(
 				{
 					id: user._id,
-					name: user.username
+					name: user.username,
+					address: publicAddress,
+					role: usrRole
 				},
 				keys.secretOrKey,
 				{

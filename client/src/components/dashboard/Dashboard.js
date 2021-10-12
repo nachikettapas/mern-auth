@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { SHA3 } from 'sha3';
 import crypto from "crypto";
 import { uploadFileIPFS } from "../../actions/ipfsActions";
+import {Redirect} from "react-router-dom";
 
 class Dashboard extends Component {
   /**
@@ -229,6 +230,11 @@ class Dashboard extends Component {
 
   render() {
     const { user } = this.props.auth;
+    const role = user.role;
+
+    if(role === "user") {
+      return <Redirect to={"/retrieve"}/>
+    }
 
     return (
       <div>
@@ -237,8 +243,8 @@ class Dashboard extends Component {
         <nav className="white">
           <div className="nav-wrapper">
             <ul id="nav-mobile" className="left hide-on-med-and-down">
-              <li><Link className="link grey-text" to="/">Upload File</Link></li>
               <li><Link className="link grey-text" to="/retrieve">Retrieve File</Link></li>
+              <li><Link className="link grey-text" to="/authorization">Authorize User</Link></li>
               <li><Link className="link grey-text" onClick={this.onLogoutClick}>Logout</Link></li>
             </ul>
           </div>
@@ -337,8 +343,8 @@ class Dashboard extends Component {
         <nav className="white">
           <div className="nav-wrapper">
             <ul id="nav-mobile" className="left hide-on-med-and-down">
-              <li><Link className="link grey-text" to="/">Upload File</Link></li>
               <li><Link className="link grey-text" to="/retrieve">Retrieve File</Link></li>
+              <li><Link className="link grey-text" to="/authorization">Authorize User</Link></li>
               <li><Link className="link grey-text" onClick={this.onLogoutClick}>Logout</Link></li>
             </ul>
           </div>

@@ -12,6 +12,7 @@ import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
 import Retrieve from "./components/dashboard/Retrieve";
+import Authorization from "./components/dashboard/Authorization";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -45,6 +46,7 @@ class App extends Component {
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute exact path="/retrieve" component={Retrieve} />
+              <PrivateRoute exact path="/authorization" component={Authorization} />
             </Switch>
           </div>
         </Router>

@@ -191,16 +191,47 @@ class Retrieve extends Component {
 
   render() {
     const { user } = this.props.auth;
+    const role = user.role;
 
     return (
         <div>
-        {!this.state.fileName && (
+        {role === "admin" && !this.state.fileName && (
         <div>
           <nav className="white">
             <div className="nav-wrapper">
               <ul id="nav-mobile" className="left hide-on-med-and-down">
                 <li><Link className="link grey-text" to="/">Upload File</Link></li>
-                <li><Link className="link grey-text" to="/retrieve">Retrieve File</Link></li>
+                <li><Link className="link grey-text" to="/authorization">Authorize User</Link></li>
+                <li><Link className="link grey-text" onClick={this.onLogoutClick}>Logout</Link></li>
+              </ul>
+            </div>
+          </nav>
+          <div style={{ height: "75vh" }} className="container">
+            <div className="row">
+              <div className="col s12">
+                <h4 className="flow-text grey-text text-darken-1">Retrieve File</h4>
+                <p className="grey-text text-darken-1">Please enter the message id of the file to retrieve from the Tangle and IPFS.</p>
+                <tr className="link grey-text">
+                  <td>Message ID: </td>
+                  <td></td>
+                  <td style={{width: "800px"}}><input className="link grey-text" type="text" placeholder="Please enter the message id" value={this.state.messageId}
+                    onChange={e => this.setState({ messageId: e.target.value }, () => this.validateData())} readOnly={this.state.isBusy}/></td>
+                  <td><button style={{width: "180px", borderRadius: "3px", letterSpacing: "1.5px", marginTop: "1rem"}}
+                    disabled={!this.state.isValid || this.state.isBusy} onClick={async () => this.retrieveFile()} className="btn btn-large waves-effect waves-light hoverable blue accent-3">
+                    Retrieve
+                    </button>
+                  </td>
+                  </tr>
+              </div>
+            </div>
+          </div>
+        </div>
+        )}
+        {role === "user" && !this.state.fileName && (
+        <div>
+          <nav className="white">
+            <div className="nav-wrapper">
+              <ul id="nav-mobile" className="left hide-on-med-and-down">
                 <li><Link className="link grey-text" onClick={this.onLogoutClick}>Logout</Link></li>
               </ul>
             </div>
@@ -232,7 +263,7 @@ class Retrieve extends Component {
             <div className="nav-wrapper">
               <ul id="nav-mobile" className="left hide-on-med-and-down">
                 <li><Link className="link grey-text" to="/">Upload File</Link></li>
-                <li><Link className="link grey-text" to="/retrieve">Retrieve File</Link></li>
+                <li><Link className="link grey-text" to="/authorization">Authorize User</Link></li>
                 <li><Link className="link grey-text" onClick={this.onLogoutClick}>Logout</Link></li>
               </ul>
             </div>

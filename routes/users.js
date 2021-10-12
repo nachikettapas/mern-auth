@@ -6,7 +6,18 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 const jwt_decode = require("jwt-decode");
-  
+//For smart contrat
+const Web3 = require("web3");
+if (typeof web3 !== 'undefined') {
+    var web3 = new Web3(web3.currentProvider)
+  } else {
+    var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'))
+}
+const contractCode = require('../contracts/RBAC.json');
+const baseAddress = "0x042Ed7DDdEE15E85d4C8a310e4BA47503F31b3c5";
+const contract = new web3.eth.Contract(contractCode.abi, baseAddress);
+const adminAddress = "0xccf20e63B3cFe990B997D9AeEABf5f2222BaC9Ff";
+
 // Load input validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
@@ -30,7 +41,15 @@ router.get("/", (req, res) => {
 // @route POST api/users
 // @desc Create user
 // @access Public
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
+  //Code to assign default role ("user") to the user. A user with admin access would be 
+  //required to promote the privileges of a normal user.
+  const memAddr = req.body.address;
+  const isUser = await contract.methods.hasRole(memAddr, web3.utils.fromAscii("user")).call();
+
+  if(!isUser)
+  	contract.methods.addMember(memAddr, web3.utils.fromAscii("user")).send({ from: adminAddress });
+
   UserOneClick.create(req.body)
     .then((user) => res.json(user))
     .catch(err => console.log(err));
@@ -81,4 +100,49 @@ router.get("/:userid", (req, res) => {
 		.catch(err => console.log(err));
   });
 
+  router.post("/authorizeuser", async (req, res) => {
+	//Code to assign default role ("user") to the user. A user with admin access would be 
+	//required to promote the privileges of a normal user.
+	const memAddr = req.body.address.address;
+	const isUser = await contract.methods.hasRole(memAddr, web3.utils.fromAscii("user")).call();
+	const isAdmin = await contract.methods.hasRole(memAddr, web3.utils.fromAscii("admin")).call();
+	
+	if(isUser && !isAdmin) {
+		await contract.methods.addMember(memAddr, web3.utils.fromAscii("admin")).send({ from: adminAddress });
+
+		res.json({
+			message: "Admin priviledge granted."
+		})
+	} else if(isAdmin) {
+		res.json({
+			message: "User already an admin."
+		})
+	} else {
+		res.json({
+			message: "User does not exist."
+		})
+	}
+  });
+
+  router.post("/unauthorizeuser", async (req, res) => {
+	//Code to assign default role ("user") to the user. A user with admin access would be 
+	//required to promote the privileges of a normal user.
+	const memAddr = req.body.address.address;
+	const isAdmin = await contract.methods.hasRole(memAddr, web3.utils.fromAscii("admin")).call();
+	
+	if(isAdmin) {
+		await contract.methods.removeMember(memAddr, web3.utils.fromAscii("admin")).send({ from: adminAddress });
+
+		res.json({
+			message: "Admin priviledge removed.",
+			code: 1
+		})
+	} else {
+		res.json({
+			message: "User does not have admin priviledges.",
+			code: 0
+		})
+	}
+  });
+  
 module.exports = router;
